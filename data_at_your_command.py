@@ -12,6 +12,7 @@ def main():
     
     #Welcome Message
     menuSelection = menuMessage()
+        
     
     #Main Menu Loop
     while menuSelection != "6":
@@ -19,7 +20,6 @@ def main():
             print("Add a Contact")
             addContact()
         elif menuSelection == "2":
-            print("View Contacts")
             viewContacts()
         elif menuSelection == "3":
             print("Search Contacts")
@@ -30,6 +30,8 @@ def main():
         elif menuSelection == "5":
             print("Delete a Contact")
             deleteContact()
+        elif menuSelection == "6":
+            print("Exiting...")
         #Clear the Screen and display the menu again
         clearScreen()
         menuSelection = menuMessage()
@@ -53,15 +55,45 @@ def menuMessage():
         clearScreen()
         menuMessage()
 
-
 def addContact():
+    import json
+    #Contact dictionary
+    contact = {}
+    
+    #Get contact information from user
+    contact["name"] = input("Enter the contact's name: ")
+    contact["phone"] = input("Enter the contact's phone number: ")
+    contact["email"] = input("Enter the contact's email address: ")
+    
+    #Open the json file and append the new contact
+    with open("contacts.json", 'r+') as f:
+        data = json.load(f)
+        data.append(contact)
+        f.seek(0)
+        json.dump(data, f, indent=4)
+        print("Contact added successfully!")
+        #Close the file
+        f.close()
+        
+    print("Contact added successfully!")
+
 
 def viewContacts():
-    
-def searchContacts():
-    
-def editContact():
+    import json
+    with open('contact_data.json', 'r') as json_file:
+        contact_data = json.load(json_file)
+        for contact in contact_data:
+            print(f"Name: {contact['name']}")
+            print(f"Phone: {contact['phone']}")
+            print(f"Email: {contact['email']}")
+            print("---------------------")
+        
+        print("Contacts viewed successfully!")
 
-def deleteContact():
     
 
+
+
+
+
+main()
