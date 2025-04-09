@@ -15,23 +15,21 @@ def main():
         
     
     #Main Menu Loop
-    while menuSelection != "6":
+    while menuSelection != "5":
         if menuSelection == "1":
             print("Add a Contact")
             addContact()
         elif menuSelection == "2":
-            viewContacts()
+            view_contacts()
         elif menuSelection == "3":
             print("Search Contacts")
             searchContacts()
         elif menuSelection == "4":
-            print("Edit a Contact")
-            editContact()
-        elif menuSelection == "5":
             print("Delete a Contact")
             deleteContact()
-        elif menuSelection == "6":
+        elif menuSelection == "5":
             print("Exiting...")
+            webbrowser.open(url)
         #Clear the Screen and display the menu again
         clearScreen()
         menuSelection = menuMessage()
@@ -43,15 +41,14 @@ def menuMessage():
     print("1. Add a Contact")
     print("2. View Contacts")
     print("3. Search Contacts")
-    print("4. Edit a Contact")
-    print("5. Delete a Contact")
-    print("6. Exit")
+    print("4. Delete a Contact")
+    print("5. Exit")
     print("---------------------")
     try:
-        userinput = input("Please select an option (1-6): ")
+        userinput = input("Please select an option (1-5): ")
         return userinput
     except ValueError:
-        print("Invalid input. Please enter a number between 1 and 6.")
+        print("Invalid input. Please enter a number between 1 and 5.")
         clearScreen()
         menuMessage()
 
@@ -66,7 +63,7 @@ def addContact():
     contact["email"] = input("Enter the contact's email address: ")
     
     #Open the json file and append the new contact
-    with open("contacts.json", 'r+') as f:
+    with open("contact_data.json", 'r+') as f:
         data = json.load(f)
         data.append(contact)
         f.seek(0)
@@ -78,22 +75,54 @@ def addContact():
     print("Contact added successfully!")
 
 
-def viewContacts():
-    import json
-    with open('contact_data.json', 'r') as json_file:
-        contact_data = json.load(json_file)
-        for contact in contact_data:
-            print(f"Name: {contact['name']}")
-            print(f"Phone: {contact['phone']}")
-            print(f"Email: {contact['email']}")
-            print("---------------------")
-        
-        print("Contacts viewed successfully!")
+import json
 
+def view_contacts():
+    try:
+        with open('contact_data.json', 'r') as file:
+            contacts = json.load(file)
+            
+            for contact in contacts:
+                print(f"Name: {contact['name']}")
+                print(f"Phone: {contact['phone']}")
+                print(f"Email: {contact['email']}")
+                print("-" * 30)
+            
+            input("Press Enter to return to the menu...")
+            
+    except FileNotFoundError:
+        print("Contact file not found!")
+    except json.JSONDecodeError:
+        print("Error reading JSON file. Check if the format is correct.")
+
+
+def searchContacts():
+    search_name = input("Enter the name of the contact you want to search for: ")
     
+    try:
+        with open('contact_data.json', 'r') as file:
+            contacts = json.load(file)
+            
+            while True:
+                for contact in contacts:
+                    if contact['name'].lower() == search_name.lower():
+                        print(f"Name: {contact['name']}")
+                        print(f"Phone: {contact['phone']}")
+                        print(f"Email: {contact['email']}")
+                        break
+                else:
+                    print("Contact not found.")
+                    break
+                input("Press Enter to return to the menu...")
+            
+    except FileNotFoundError:
+        print("Contact file not found!")
+    except json.JSONDecodeError:
+        print("Error reading JSON file. Check if the format is correct.")
 
 
+import webbrowser
 
-
+url = "https://www.youtube.com/watch?v=xvFZjo5PgG0"
 
 main()
