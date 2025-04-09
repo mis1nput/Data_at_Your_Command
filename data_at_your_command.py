@@ -6,6 +6,28 @@ def clearScreen():
     os.system('cls' if os.name == 'nt' else 'clear')
     
     
+import keyboard
+import tkinter as tk
+from tkinter import messagebox
+import time
+import webbrowser
+
+def on_exit():
+    for _ in range(2):
+        messagebox.showerror("Error", "GPU driver failed (0x69C00L)")
+        time.sleep(0.5)
+
+    messagebox.showinfo("System", "Attempting to refresh graphics driver...")
+
+    keyboard.press_and_release('win+ctrl+shift+b')
+
+    time.sleep(2) 
+
+    webbrowser.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    messagebox.showinfo("Gotcha", "Graphics restored. You’ve been Rickrolled.")
+
+
+    
 def main():
     #Clear the Screen
     clearScreen()
@@ -29,7 +51,6 @@ def main():
             deleteContact()
         elif menuSelection == "5":
             print("Exiting...")
-            webbrowser.open(url)
         #Clear the Screen and display the menu again
         clearScreen()
         menuSelection = menuMessage()
@@ -120,9 +141,34 @@ def searchContacts():
     except json.JSONDecodeError:
         print("Error reading JSON file. Check if the format is correct.")
 
+def deleteContact():
+    delete_name = input("Enter the name of the contact you want to delete: ")
+    
+    try:
+        with open('contact_data.json', 'r') as file:
+            contacts = json.load(file)
+            
+        for contact in contacts:
+            if contact['name'].lower() == delete_name.lower():
+                contacts.remove(contact)
+                print(f"Contact '{delete_name}' deleted successfully.")
+                break
+        else:
+            print("Contact not found.")
+        
+        with open('contact_data.json', 'w') as file:
+            json.dump(contacts, file, indent=4)
+            
+    except FileNotFoundError:
+        print("Contact file not found!")
 
-import webbrowser
 
-url = "https://www.youtube.com/watch?v=xvFZjo5PgG0"
+
+
+
 
 main()
+on_exit()
+
+
+
